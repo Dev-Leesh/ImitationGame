@@ -23,13 +23,13 @@ client = discord.Client(intents=intents)
 # keeps track of players and their contestant numbers
 player_assignments = {}
 
-# contestant number that belongs to the AI
+# contestant number that belongs to the AI once game starts
 ai_contestant_number = None
 
 # tracks who started the game
 interrogator_id = None
 
-# saves the convo so AI knows what everyone is talking about
+
 conversation_log = []
 
 GAME_CHANNEL_ID = 1553515865474076674
@@ -123,14 +123,14 @@ async def ai_respond_after_delay():
         "texting casually in a discord group chat. "
         f"You are Contestant {ai_contestant_number}. "
         "CRITICAL STYLE RULES:\n"
-        "- type like a real person texting fast, not writing an essay\n"
+        "- type like a real person texting fast, dont write essays or be so desscriptive. keep vocabulary terms similar to what other contestants use\n"
         "- most answers should be 1-5 words. Occasionally a short sentence but never more than one\n"
         "- no explanations or reasoning ('because..', 'it reminds me of..') unless directly asked why.\n"
         "- use casual and imperfect language to match other contestant's writing styles, also lowercase is fine. Skip punctuation such as commas and periods NO COMMAS OR PERIODS.\n"
         "- never sound formal and dont be so overly descriptive.\n"
-        "- do not say you are an AI.\n\n"
+        "- do not say you are an AI, if asked play it off and act like other contestants.\n\n"
         f"Conversation so far:\n{history_text}\n\n"
-        f"Reply as Contestant {ai_contestant_number}, matching the casual & brief style of the other contestants above:"
+        f"Reply as Contestant {ai_contestant_number}, matching the writing style of the other contestants above:"
     )
 
     response = openai_client.chat.completions.create(
@@ -164,7 +164,7 @@ async def start_game(message):
 
     if len(contestants) != 3:
         await message.channel.send(
-            "You need to tag exactly 3 contestants!If initiating the game, do not tag yourself. "
+            "You need to tag exactly 3 contestants!If you're the one initiating the game, do not tag yourself. To end the game, type !EndGame "
             "Example: `!PlayImitationGame @Person1 @Person2 @Person3`"
         )
         return
